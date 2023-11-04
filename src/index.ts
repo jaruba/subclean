@@ -304,7 +304,7 @@ class SubClean {
      * @param item Queue item
      * @returns IArguments
      */
-    public cleanFile(item: IArguments, raw: string): Promise<IArguments> {
+    public cleanFile(item: IArguments, raw: string): Promise<string> {
         return new Promise((done, reject) => {
             try {
                 // Parse the subtitle file
@@ -438,7 +438,7 @@ class SubClean {
                 }
 
                 // Resolve the promise
-                done(item);
+                done(cleaned);
             } catch (error) {
                 if (`${error}`.includes('expected timestamp at')) {
                     this.log(`[Error] Unable to parse "${item.input}"`);
@@ -606,16 +606,19 @@ class SubClean {
             }
         }
     }
+
     public async module(raw: string) {
-        this.args.testing = true;
         this.ensureDirs();
         // Load the blacklist
         this.loadBlacklist('main');
         this.loadBlacklist('users');
         this.loadBlacklist('custom');
 
-        return this.cleanFile({} as IArguments, raw);
+        this.args.testing = true;
+        this.args.ne = true;
+
+        return this.cleanFile(this.args, raw);
     }
 }
 
-module.exports = new SubClean().module;
+module.exports = SubClean
