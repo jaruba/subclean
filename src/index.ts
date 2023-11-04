@@ -600,13 +600,13 @@ class SubClean {
             }
 
             try {
-                await this.cleanFile(item);
+                await this.cleanFile(item, '');
             } catch (error) {
                 this.log(`[Error] ${error}`);
             }
         }
     }
-    public async module(raw) {
+    public async module(raw: string) {
         this.args.testing = true;
         this.ensureDirs();
         // Load the blacklist
@@ -614,7 +614,7 @@ class SubClean {
         this.loadBlacklist('users');
         this.loadBlacklist('custom');
 
-        return this.cleanFile(null, raw);
+        return this.cleanFile({} as IArguments, raw);
     }
 }
 
