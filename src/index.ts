@@ -304,11 +304,11 @@ class SubClean {
      * @param item Queue item
      * @returns IArguments
      */
-    public cleanFile(item: IArguments): Promise<IArguments> {
+    public cleanFile(item: IArguments, raw: string): Promise<IArguments> {
         return new Promise((done, reject) => {
             try {
                 // Parse the subtitle file
-                let fileData = readFileSync(item.input, 'utf-8');
+                let fileData = raw || readFileSync(item.input, 'utf-8');
 
                 // Remove all cases of \r (parser can not handle these)
                 fileData = fileData.replace(/\r/g, ' ');
@@ -606,6 +606,16 @@ class SubClean {
             }
         }
     }
+    public async module(raw) {
+        this.args.testing = true;
+        this.ensureDirs();
+        // Load the blacklist
+        this.loadBlacklist('main');
+        this.loadBlacklist('users');
+        this.loadBlacklist('custom');
+
+        return this.cleanFile(null, raw);
+    }
 }
 
-new SubClean().init();
+module.exports = new SubClean().module;
