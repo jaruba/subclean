@@ -621,4 +621,8 @@ class SubClean {
     }
 }
 
-module.exports = SubClean
+module.exports = SubClean;
+
+if (require.main === module) {
+    new SubClean().init();
+}
